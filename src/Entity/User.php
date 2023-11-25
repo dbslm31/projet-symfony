@@ -6,9 +6,12 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+#[UniqueEntity(fields: ['mail'], message: 'There is already an account with this mail')]
+class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,7 +21,7 @@ class User
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $mail = null;
 
     #[ORM\Column(length: 255)]
@@ -33,6 +36,9 @@ class User
 
     #[ORM\OneToOne(mappedBy: 'client', cascade: ['persist', 'remove'])]
     private ?Panier $panier = null;
+
+    #[ORM\Column(type: 'boolean')]
+    private $isVerified = false;
 
     public function __construct()
     {
@@ -139,4 +145,52 @@ class User
         return $this;
     }
 
+    // Implementation of UserInterface methods
+
+    public function getRoles(): array
+    {
+        return [$this->getRole()->getName()];
+    }
+
+    public function getPassword(): string
+    {
+        return $this->mdp;
+    }
+
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->mail;
+    }
+
+    public function eraseCredentials()
+    {
+        // Remove sensitive data from the user
+        // This method is called on the original User object when it's no longer needed to store plain-text passwords, etc.
+    }
+
+    //public function getUserIdentifier(): string
+    //{
+
+    //}
+    public function getUserIdentifier(): string
+    {
+        // TODO: Implement getUserIdentifier() method.
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
+    }
 }
