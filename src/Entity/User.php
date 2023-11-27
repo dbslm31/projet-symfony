@@ -10,7 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity(fields: ['mail'], message: 'There is already an account with this mail')]
+
 class User implements UserInterface
 {
     #[ORM\Id]
@@ -20,8 +20,7 @@ class User implements UserInterface
 
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
-
-    #[ORM\Column(length: 255, unique: true)]
+    #[ORM\Column(length: 255)]
     private ?string $mail = null;
 
     #[ORM\Column(length: 255)]
@@ -37,13 +36,17 @@ class User implements UserInterface
     #[ORM\OneToOne(mappedBy: 'client', cascade: ['persist', 'remove'])]
     private ?Panier $panier = null;
 
-    #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private bool $isVerified = false;
 
     public function __construct()
     {
         $this->commandes = new ArrayCollection();
     }
+
+    // Getters and Setters
 
     public function getId(): ?int
     {
@@ -55,10 +58,9 @@ class User implements UserInterface
         return $this->nom;
     }
 
-    public function setNom(string $nom): static
+    public function setNom(?string $nom): self
     {
         $this->nom = $nom;
-
         return $this;
     }
 
@@ -67,10 +69,9 @@ class User implements UserInterface
         return $this->mail;
     }
 
-    public function setMail(string $mail): static
+    public function setMail(?string $mail): self
     {
         $this->mail = $mail;
-
         return $this;
     }
 
@@ -79,10 +80,9 @@ class User implements UserInterface
         return $this->mdp;
     }
 
-    public function setMdp(string $mdp): static
+    public function setMdp(?string $mdp): self
     {
         $this->mdp = $mdp;
-
         return $this;
     }
 
@@ -91,10 +91,9 @@ class User implements UserInterface
         return $this->role;
     }
 
-    public function setRole(?Role $role): static
+    public function setRole(?Role $role): self
     {
         $this->role = $role;
-
         return $this;
     }
 
@@ -106,7 +105,7 @@ class User implements UserInterface
         return $this->commandes;
     }
 
-    public function addCommande(Commande $commande): static
+    public function addCommande(Commande $commande): self
     {
         if (!$this->commandes->contains($commande)) {
             $this->commandes->add($commande);
@@ -116,7 +115,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function removeCommande(Commande $commande): static
+    public function removeCommande(Commande $commande): self
     {
         if ($this->commandes->removeElement($commande)) {
             // set the owning side to null (unless already changed)
@@ -133,15 +132,14 @@ class User implements UserInterface
         return $this->panier;
     }
 
-    public function setPanier(Panier $panier): static
+    public function setPanier(?Panier $panier): self
     {
         // set the owning side of the relation if necessary
-        if ($panier->getClient() !== $this) {
+        if ($panier && $panier->getClient() !== $this) {
             $panier->setClient($this);
         }
 
         $this->panier = $panier;
-
         return $this;
     }
 
@@ -170,16 +168,11 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         // Remove sensitive data from the user
-        // This method is called on the original User object when it's no longer needed to store plain-text passwords, etc.
     }
 
-    //public function getUserIdentifier(): string
-    //{
-
-    //}
     public function getUserIdentifier(): string
     {
-        // TODO: Implement getUserIdentifier() method.
+        return $this->mail;
     }
 
     public function isVerified(): bool
@@ -187,10 +180,9 @@ class User implements UserInterface
         return $this->isVerified;
     }
 
-    public function setIsVerified(bool $isVerified): static
+    public function setIsVerified(bool $isVerified): self
     {
         $this->isVerified = $isVerified;
-
         return $this;
     }
 }
