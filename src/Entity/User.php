@@ -6,9 +6,12 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+
+class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -17,7 +20,6 @@ class User
 
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
-
     #[ORM\Column(length: 255)]
     private ?string $mail = null;
 
@@ -34,10 +36,17 @@ class User
     #[ORM\OneToOne(mappedBy: 'client', cascade: ['persist', 'remove'])]
     private ?Panier $panier = null;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private bool $isVerified = false;
+
     public function __construct()
     {
         $this->commandes = new ArrayCollection();
     }
+
+    // Getters and Setters
 
     public function getId(): ?int
     {
@@ -49,10 +58,9 @@ class User
         return $this->nom;
     }
 
-    public function setNom(string $nom): static
+    public function setNom(?string $nom): self
     {
         $this->nom = $nom;
-
         return $this;
     }
 
@@ -61,10 +69,9 @@ class User
         return $this->mail;
     }
 
-    public function setMail(string $mail): static
+    public function setMail(?string $mail): self
     {
         $this->mail = $mail;
-
         return $this;
     }
 
@@ -73,10 +80,9 @@ class User
         return $this->mdp;
     }
 
-    public function setMdp(string $mdp): static
+    public function setMdp(?string $mdp): self
     {
         $this->mdp = $mdp;
-
         return $this;
     }
 
@@ -85,10 +91,9 @@ class User
         return $this->role;
     }
 
-    public function setRole(?Role $role): static
+    public function setRole(?Role $role): self
     {
         $this->role = $role;
-
         return $this;
     }
 
@@ -100,7 +105,7 @@ class User
         return $this->commandes;
     }
 
-    public function addCommande(Commande $commande): static
+    public function addCommande(Commande $commande): self
     {
         if (!$this->commandes->contains($commande)) {
             $this->commandes->add($commande);
@@ -110,7 +115,7 @@ class User
         return $this;
     }
 
-    public function removeCommande(Commande $commande): static
+    public function removeCommande(Commande $commande): self
     {
         if ($this->commandes->removeElement($commande)) {
             // set the owning side to null (unless already changed)
@@ -127,16 +132,57 @@ class User
         return $this->panier;
     }
 
-    public function setPanier(Panier $panier): static
+    public function setPanier(?Panier $panier): self
     {
         // set the owning side of the relation if necessary
-        if ($panier->getClient() !== $this) {
+        if ($panier && $panier->getClient() !== $this) {
             $panier->setClient($this);
         }
 
         $this->panier = $panier;
-
         return $this;
     }
 
+    // Implementation of UserInterface methods
+
+    public function getRoles(): array
+    {
+        return [$this->getRole()->getName()];
+    }
+
+    public function getPassword(): string
+    {
+        return $this->mdp;
+    }
+
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->mail;
+    }
+
+    public function eraseCredentials()
+    {
+        // Remove sensitive data from the user
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->mail;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
+        return $this;
+    }
 }
