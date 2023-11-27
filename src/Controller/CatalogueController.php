@@ -20,13 +20,15 @@ class CatalogueController extends AbstractController
     #[Route('/catalogue', name: 'app_catalogue')]
     public function displayProducts(): Response
     {
-        // Récupérer le Repository Doctrine pour l'entité Catalogue
+
         $repository = $this->entityManager->getRepository(Catalogue::class);
 
-        // Effectuer une requête pour récupérer les produits
         $products = $repository->findAll();
 
-        // Formater les données pour ne conserver que le nom et le prix
+        if (!$products) {
+            throw $this->createNotFoundException('Oups ! Le catalogue est vide');
+        }
+
         $formattedProducts = [];
         foreach ($products as $product) {
             $formattedProducts[] = [
@@ -36,24 +38,24 @@ class CatalogueController extends AbstractController
             ];
         }
 
-        // Vous pouvez ensuite passer $formattedProducts à votre template ou le retourner directement en JSON, par exemple
+
         return $this->json($formattedProducts);
     }
 
     #[Route('/catalogue/{id}', name: 'app_product_detail')]
     public function displayProductDetail($id): Response
     {
-        // Récupérer le Repository Doctrine pour l'entité Catalogue
+
         $repository = $this->entityManager->getRepository(Catalogue::class);
 
-        // Rechercher le produit par ID
+        // Find product  by id
         $product = $repository->find($id);
 
         if (!$product) {
             throw $this->createNotFoundException('Le produit avec l\'ID ' . $id . ' n\'existe pas.');
         }
 
-        // Vous pouvez ensuite passer les détails du produit à votre template ou le retourner directement en JSON, par exemple
+
         return $this->json([
             'nom' => $product->getNom(),
             'description' => $product->getDescription(),
