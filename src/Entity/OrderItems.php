@@ -16,6 +16,9 @@ class OrderItems
     #[ORM\ManyToOne(inversedBy: 'orderItems')]
     private ?Catalogue $produit = null;
 
+    #[ORM\Column(type: 'integer')]
+    private int $quantity = 1; //
+
     public function getId(): ?int
     {
         return $this->id;
@@ -33,5 +36,15 @@ class OrderItems
         return $this;
     }
 
+    public function getQuantity(): int
+    {
+        return $this->quantity;
+    }
 
+    public function setQuantity(int $quantity): static
+    {
+        $this->quantity = $quantity;
+
+        return $this;
+    }
 }
