@@ -18,8 +18,11 @@ class Commande
     #[ORM\JoinColumn(nullable: false)]
     private ?User $client = null;
 
-    #[ORM\Column(length: 9999)]
-    private ?string $produits = null;
+   /* #[ORM\Column(length: 9999)]
+    private ?string $produits = null;*/
+
+    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: OrderItems::class, cascade: ['persist', 'remove'])]
+    private Collection $orderItems;
 
     #[ORM\Column(type: Types::DATETIMETZ_MUTABLE)]
     private ?\DateTimeInterface $commande = null;
@@ -53,7 +56,7 @@ class Commande
         return $this;
     }
 
-    public function getProduits(): ?string
+    /*public function getProduits(): ?string
     {
         return $this->produits;
     }
@@ -61,6 +64,37 @@ class Commande
     public function setProduits(string $produits): static
     {
         $this->produits = $produits;
+
+        return $this;
+    }*/
+    public function __construct()
+    {
+        $this->orderItems = new ArrayCollection();
+    }
+
+    public function getOrderItems(): Collection
+    {
+        return $this->orderItems;
+    }
+
+    public function addOrderItem(OrderItems $orderItem): self
+    {
+        if (!$this->orderItems->contains($orderItem)) {
+            $this->orderItems->add($orderItem);
+            $orderItem->setCommande($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderItem(OrderItems $orderItem): self
+    {
+        if ($this->orderItems->removeElement($orderItem)) {
+            // set the owning side to null (unless already changed)
+            if ($orderItem->getCommande() === $this) {
+                $orderItem->setCommande(null);
+            }
+        }
 
         return $this;
     }

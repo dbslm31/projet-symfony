@@ -17,8 +17,11 @@ class Panier
     #[ORM\JoinColumn(nullable: false)]
     private ?User $client = null;
 
-    #[ORM\Column(length: 9999)]
-    private ?string $produits = null;
+    #[ORM\OneToMany(mappedBy: 'panier', targetEntity: OrderItems::class, cascade: ['persist', 'remove'])]
+    private Collection $orderItems;
+
+   /* #[ORM\Column(length: 9999)]
+    private ?string $produits = null;*/
 
     public function getId(): ?int
     {
@@ -37,7 +40,7 @@ class Panier
         return $this;
     }
 
-    public function getProduits(): ?string
+    /*public function getProduits(): ?string
     {
         return $this->produits;
     }
@@ -47,5 +50,42 @@ class Panier
         $this->produits = $produits;
 
         return $this;
+    }*/
+
+    public function __construct()
+    {
+        $this->orderItems = new ArrayCollection();
     }
+
+
+    /**
+     * @return Collection<OrderItems>
+     */
+    public function getOrderItems(): Collection
+    {
+        return $this->orderItems;
+    }
+
+    public function addOrderItem(OrderItems $orderItem): self
+    {
+        if (!$this->orderItems->contains($orderItem)) {
+            $this->orderItems->add($orderItem);
+            $orderItem->setPanier($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderItem(OrderItems $orderItem): self
+    {
+        if ($this->orderItems->removeElement($orderItem)) {
+            // set the owning side to null (unless already changed)
+            if ($orderItem->getPanier() === $this) {
+                $orderItem->setPanier(null);
+            }
+        }
+
+        return $this;
+    }
+
 }
