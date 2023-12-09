@@ -3,22 +3,25 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use App\Repository\RoleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity(fields: ['mail'], message: 'There is already an account with this mail')]
 
-class User implements UserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $nom = null;
     #[ORM\Column(length: 255)]
     private ?string $mail = null;
@@ -41,10 +44,18 @@ class User implements UserInterface
      */
     private bool $isVerified = false;
 
-    public function __construct()
+    public function __construct(RoleRepository $roleRepository)
     {
         $this->commandes = new ArrayCollection();
+        // Définir le rôle par défaut sur "Client" si le rôle est nul
+        $this->role = $roleRepository->findOneBy(['nom' => 'Client']);
     }
+
+// Autres méthodes et propriétés...
+
+// Laissez seulement une déclaration du constructeur
+// Vous n'avez plus besoin de la deuxième déclaration
+
 
     // Getters and Setters
 
@@ -73,6 +84,10 @@ class User implements UserInterface
     {
         $this->mail = $mail;
         return $this;
+    }
+    public function getUsername(): string
+    {
+        return $this->mail;
     }
 
     public function getMdp(): ?string
@@ -147,7 +162,7 @@ class User implements UserInterface
 
     public function getRoles(): array
     {
-        return [$this->getRole()->getName()];
+        return [$this->getRole()->getNom()];
     }
 
     public function getPassword(): string
@@ -160,10 +175,6 @@ class User implements UserInterface
         return null;
     }
 
-    public function getUsername(): string
-    {
-        return $this->mail;
-    }
 
     public function eraseCredentials()
     {
