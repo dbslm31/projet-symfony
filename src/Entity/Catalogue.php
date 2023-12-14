@@ -157,20 +157,21 @@ class Catalogue
         return $this->orderItems;
     }
 
-    public function addOrderItem(OrderItems $orderItem): static
+    public function addOrderItem(OrderItems $orderItem): self
     {
         if (!$this->orderItems->contains($orderItem)) {
             $this->orderItems->add($orderItem);
-            $orderItem->setProduit($this);
+            $orderItem->setProduit($this); // Assure-toi de bien définir la relation bidirectionnelle ici
         }
 
         return $this;
     }
 
-    public function removeOrderItem(OrderItems $orderItem): static
+    public function removeOrderItem(OrderItems $orderItem): self
     {
-        if ($this->orderItems->removeElement($orderItem)) {
-            // set the owning side to null (unless already changed)
+        if ($this->orderItems->contains($orderItem)) {
+            $this->orderItems->removeElement($orderItem);
+            // Assure-toi de bien définir la relation bidirectionnelle à null ici
             if ($orderItem->getProduit() === $this) {
                 $orderItem->setProduit(null);
             }

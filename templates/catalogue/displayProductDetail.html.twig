@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du produit{{ product.nom }}{% endblock %}
+
+{% block body %}
+    <h1>{{ product.nom }}</h1>
+    <p>Description : {{ product.description }}</p>
+    <p>Prix : {{ product.prix }} €</p>
+    <img src="{{ asset('images/' ~ product.image) }}" alt="{{ product.nom }}">
+
+    {{ form_start(form, {'attr': {'class': 'mt-4 p-4 bg-light'}}) }}
+    <div class="form-group">
+        {{ form_label(form.quantity) }}
+        {{ form_widget(form.quantity, {
+            'attr': {
+                'class': 'form-control ' ~ (form.quantity.vars.valid ? '' : 'is-invalid')
+            }
+        }) }}
+        <div class="invalid-feedback">
+            {{ form_errors(form.quantity) }}
+        </div>
+    </div>
+    {{ form_widget(form.add, {'attr': {'class': 'btn btn-warning w-25'}}) }}
+    {{ form_end(form) }}
+
+    <a href="{{ path('app_catalogue') }}">Retour au catalogue</a>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catalogue de produits{% endblock %}
+
+{% block body %}
+    <h1>Catalogue de produits</h1>
+
+    <ul>
+        {% for product in products %}
+            <li>
+                <a href="{{ path('app_product_detail', {'id': product.id}) }}">
+                    {{ product.nom }}
+                </a>
+                - {{ product.prix }} €
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

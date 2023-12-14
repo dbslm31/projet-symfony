@@ -13,11 +13,20 @@ class OrderItems
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'orderItems')]
+    #[ORM\ManyToOne(targetEntity: Catalogue::class)]
     private ?Catalogue $produit = null;
 
     #[ORM\Column(type: 'integer')]
     private int $quantity = 1; //
+
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
+    private ?float $total = null;
+
+    //#[ORM\ManyToOne(inversedBy: 'orderItems')]
+    //private ?Panier $panier = null;
+
+    #[ORM\ManyToOne(targetEntity: Commande::class, inversedBy: 'orderItems')]
+    private ?Commande $commandeRef = null;
 
     public function getId(): ?int
     {
@@ -47,4 +56,40 @@ class OrderItems
 
         return $this;
     }
+
+    public function getCommandeRef(): ?Commande
+    {
+        return $this->commandeRef;
+    }
+
+    public function setCommandeRef(?Commande $commandeRef): self
+    {
+        $this->commandeRef = $commandeRef;
+
+        return $this;
+    }
+
+    /**
+     * Tests if the given item given corresponds to the same order item.
+     *
+     * @param OrderItem $item
+     *
+     * @return bool
+     */
+    public function equals(OrderItem $orderItem): bool
+    {
+        return $this->getProduit()->getId() === $orderItem->getProduit()->getId();
+    }
+
+    /**
+     * Calculates the item total.
+     *
+     * @return float|int
+     */
+    public function getTotal(): float
+    {
+        return $this->getProduit()->getPrix() * $this->getQuantity();
+    }
+
+
 }

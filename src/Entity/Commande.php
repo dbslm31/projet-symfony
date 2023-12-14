@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CommandeRepository;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommandeRepository::class)]
@@ -14,14 +15,13 @@ class Commande
     #[ORM\Column]
     private ?int $id = null;
 
+    //USERID
     #[ORM\ManyToOne(inversedBy: 'commandes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $client = null;
 
-   /* #[ORM\Column(length: 9999)]
-    private ?string $produits = null;*/
-
-    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: OrderItems::class, cascade: ['persist', 'remove'])]
+    //ORDERITEMS
+    #[ORM\OneToMany(mappedBy: 'commandeRef', targetEntity: OrderItems::class, cascade: ['persist', 'remove'])]
     private Collection $orderItems;
 
     #[ORM\Column(type: Types::DATETIMETZ_MUTABLE)]
@@ -33,12 +33,23 @@ class Commande
     #[ORM\Column(type: Types::DATETIMETZ_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $livraison = null;
 
+    //STATUS
     #[ORM\Column(length: 255)]
-    private ?string $statut = null;
+    private ?string $statut = self::STATUT_PANIER;
 
+    /**
+     * An order that is in progress, not placed yet.
+     *
+     * @var string
+     */
+    const STATUT_PANIER = 'panier';
+
+    //PRICE
     #[ORM\Column]
     private ?int $prix = null;
 
+
+    //------- METHODES -------//
     public function getId(): ?int
     {
         return $this->id;
@@ -56,7 +67,7 @@ class Commande
         return $this;
     }
 
-    /*public function getProduits(): ?string
+    public function getProduits(): ?string
     {
         return $this->produits;
     }
@@ -66,7 +77,7 @@ class Commande
         $this->produits = $produits;
 
         return $this;
-    }*/
+    }
     public function __construct()
     {
         $this->orderItems = new ArrayCollection();
@@ -79,25 +90,32 @@ class Commande
 
     public function addOrderItem(OrderItems $orderItem): self
     {
-        if (!$this->orderItems->contains($orderItem)) {
-            $this->orderItems->add($orderItem);
-            $orderItem->setCommande($this);
+        foreach ($this->getOrderItems() as $existingItem) {
+            // The item already exists, update the quantity
+            if ($existingItem->equals($orderItem)) {
+                $existingItem->setQuantity(
+                    $existingItem->getQuantity() + $orderItem->getQuantity()
+                );
+                return $this;
+            }
         }
 
+        $this->orderItems[] = $orderItem;
+        $orderItem->setCommandeRef($this);
         return $this;
     }
 
     public function removeOrderItem(OrderItems $orderItem): self
     {
         if ($this->orderItems->removeElement($orderItem)) {
-            // set the owning side to null (unless already changed)
-            if ($orderItem->getCommande() === $this) {
-                $orderItem->setCommande(null);
+
+            if ($orderItem->getCommandeRef() === $this) {
+                $orderItem->setCommandeRef(null);
             }
         }
-
         return $this;
     }
+
 
     public function getCommande(): ?\DateTimeInterface
     {
@@ -158,4 +176,22 @@ class Commande
 
         return $this;
     }
+
+    /**
+     * Calculates the order total.
+     *
+     * @return float
+     */
+    public function getTotal(): float
+    {
+        $total = 0;
+
+        foreach ($this->getOrderItems() as $orderItem) {
+            $total += $orderItem->getTotal();
+        }
+
+        return $total;
+    }
+
+
 }

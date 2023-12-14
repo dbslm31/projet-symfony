@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Catalogue;
+use App\Form\AddToCartType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +21,6 @@ class CatalogueController extends AbstractController
     #[Route('/catalogue', name: 'app_catalogue')]
     public function displayProducts(): Response
     {
-
         $repository = $this->entityManager->getRepository(Catalogue::class);
 
         $products = $repository->findAll();
@@ -29,18 +29,11 @@ class CatalogueController extends AbstractController
             throw $this->createNotFoundException('Oups ! Le catalogue est vide');
         }
 
-        $formattedProducts = [];
-        foreach ($products as $product) {
-            $formattedProducts[] = [
-                'nom' => $product->getNom(),
-                'prix' => $product->getPrix(),
-                'image' => $product->getImage(),
-            ];
-        }
-
-
-        return $this->json($formattedProducts);
+        return $this->render('catalogue/displayProducts.html.twig', [
+            'products' => $products, // Passer les produits au template
+        ]);
     }
+
 
     #[Route('/catalogue/{id}', name: 'app_product_detail')]
     public function displayProductDetail($id): Response
@@ -55,12 +48,11 @@ class CatalogueController extends AbstractController
             throw $this->createNotFoundException('Le produit avec l\'ID ' . $id . ' n\'existe pas.');
         }
 
+        $form = $this->createForm(AddToCartType::class);
 
-        return $this->json([
-            'nom' => $product->getNom(),
-            'description' => $product->getDescription(),
-            'prix' => $product->getPrix(),
-            'image' => $product->getImage(),
+        return $this->render('catalogue/displayProductDetail.html.twig', [
+            'product' => $product,
+            'form' => $form->createView()
         ]);
     }
 }

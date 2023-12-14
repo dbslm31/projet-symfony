@@ -15,3 +15,15 @@ app_register:
 app_login:
     path: /login
     controller: App\Controller\SecurityController::login
+
+app_catalogue:
+        path: /catalogue
+        controller: App\Controller\CatalogueController::displayProducts
+
+app_panier:
+    path: /panier
+    controller: App\Controller\PanierController::voirPanier
+
+app_ajouter_au_panier :
+    path: /ajouter-au-panier/{id}
+    controller: App\Controller\PanierController::ajouterAuPanier

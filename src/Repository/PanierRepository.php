@@ -16,6 +16,14 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class PanierRepository extends ServiceEntityRepository
 {
+    public function createEmptyPanier(): Panier
+    {
+        $panier = new Panier();
+        // Tu pourrais également attribuer le client à ce moment-là si tu as besoin de cette information.
+        // $panier->setClient($client);
+
+        return $panier;
+    }
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Panier::class);
