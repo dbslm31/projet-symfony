@@ -24,7 +24,7 @@ class PanierSessionStorage
     {
         return $this->panierRepository->findOneBy([
             'id' => $this->getPanierId(),
-            'status' => Commande::STATUT_PANIER
+            'statut' => Commande::STATUT_PANIER
         ]);
     }
 

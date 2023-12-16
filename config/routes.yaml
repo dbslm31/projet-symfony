@@ -22,8 +22,6 @@ app_catalogue:
 
 app_panier:
     path: /panier
-    controller: App\Controller\PanierController::voirPanier
+    controller: App\Controller\PanierController::index
 
-app_ajouter_au_panier :
-    path: /ajouter-au-panier/{id}
-    controller: App\Controller\PanierController::ajouterAuPanier
+

@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Catalogue;
 use App\Form\AddToCartType;
+use App\Manager\PanierManager;
+use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CatalogueController extends AbstractController
 {
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -36,19 +38,22 @@ class CatalogueController extends AbstractController
 
 
     #[Route('/catalogue/{id}', name: 'app_product_detail')]
-    public function displayProductDetail($id): Response
+    public function displayProductDetail(Catalogue $product, Request $request, PanierManager $panierManager): Response
     {
-
-        $repository = $this->entityManager->getRepository(Catalogue::class);
-
-        // Find product  by id
-        $product = $repository->find($id);
-
-        if (!$product) {
-            throw $this->createNotFoundException('Le produit avec l\'ID ' . $id . ' n\'existe pas.');
-        }
-
         $form = $this->createForm(AddToCartType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $item = $form->getData();
+            $item->setProduit($product);
+
+            $panier = $panierManager->getCurrentPanier();
+            $panier->addOrderItem($item);
+            $this->entityManager->persist($panier);
+            $this->entityManager->flush();
+
+            return $this->redirectToRoute('app_product_detail', ['id' => $product->getId()]);
+        }
 
         return $this->render('catalogue/displayProductDetail.html.twig', [
             'product' => $product,

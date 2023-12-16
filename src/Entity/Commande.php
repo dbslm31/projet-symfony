@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CommandeRepository;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -81,6 +82,8 @@ class Commande
     public function __construct()
     {
         $this->orderItems = new ArrayCollection();
+        $this->commande = new \DateTime(); // Initialise avec la date et l'heure actuelles
+        $this->prix = 0;
     }
 
     public function getOrderItems(): Collection

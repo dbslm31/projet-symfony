@@ -196,4 +196,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->isVerified = $isVerified;
         return $this;
     }
+
+    public static function createGuest(RoleRepository $roleRepository): self
+    {
+        $guest = new self($roleRepository); // Utilisez le RoleRepository ici
+        $guest->setNom('Invité');
+        $guest->setMail('guest@example.com'); // Définissez une adresse email fictive ou laissez-la vide
+        $guest->setMdp(''); // Pas de mot de passe pour le client invité
+        $guest->setIsVerified(true); // Marquez comme vérifié si nécessaire
+
+        // Configurez d'autres propriétés si nécessaire...
+
+        return $guest;
+    }
 }

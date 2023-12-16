@@ -21,7 +21,7 @@ class CommandeFactory
     {
         $commande = new Commande();
         $commande
-            ->setStatut(Commande::STATUT_CART);
+            ->setStatut(Commande::STATUT_PANIER);
             //->setCreatedAt(new \DateTime())
             //->setUpdatedAt(new \DateTime());
 

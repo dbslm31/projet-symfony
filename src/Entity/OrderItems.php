@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\OrderItemsRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrderItemsRepository::class)]
@@ -17,7 +18,9 @@ class OrderItems
     private ?Catalogue $produit = null;
 
     #[ORM\Column(type: 'integer')]
-    private int $quantity = 1; //
+    #[Assert\NotBlank]
+    #[Assert\GreaterThanOrEqual(1)]
+    private int $quantity;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
     private ?float $total = null;
@@ -72,11 +75,11 @@ class OrderItems
     /**
      * Tests if the given item given corresponds to the same order item.
      *
-     * @param OrderItem $item
+     * @param OrderItems $orderItem
      *
      * @return bool
      */
-    public function equals(OrderItem $orderItem): bool
+    public function equals(OrderItems $orderItem): bool
     {
         return $this->getProduit()->getId() === $orderItem->getProduit()->getId();
     }
@@ -86,7 +89,7 @@ class OrderItems
      *
      * @return float|int
      */
-    public function getTotal(): float
+    public function getTotal(): float|int
     {
         return $this->getProduit()->getPrix() * $this->getQuantity();
     }
