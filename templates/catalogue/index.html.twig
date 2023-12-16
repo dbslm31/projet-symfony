@@ -8,6 +8,10 @@
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
+<header>
+    {% include "header.html.twig" %}
+</header>
+
 <div class="example-wrapper">
     <h1>Hello {{ controller_name }}! ✅</h1>
 
@@ -16,5 +20,21 @@
         <li>Your controller at <code><a href="{{ '/Applications/MAMP/htdocs/projet-symfony/src/Controller/CatalogueController.php'|file_link(0) }}">src/Controller/CatalogueController.php</a></code></li>
         <li>Your template at <code><a href="{{ '/Applications/MAMP/htdocs/projet-symfony/templates/catalogue/index.html.twig'|file_link(0) }}">templates/catalogue/index.html.twig</a></code></li>
     </ul>
+</div>
+<div class="d-flex flex-wrap">
+{% for product in products %}
+<div class="card h-100">
+    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+    <div class="card-body p-4">
+        <div class="text-center">
+            <h5 class="fw-bolder">{{product.nom}}</h5>
+            {{product.prix}}&#8364
+        </div>
+    </div>
+    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="catalogue/"+{{product.id}}>View options</a></div>
+    </div>
+</div>
+{% endfor %}
 </div>
 {% endblock %}

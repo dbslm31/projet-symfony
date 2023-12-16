@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<header>
+    {% include "header.html.twig" %}
+</header>
+{{form_start(form)}}
+        {{ form_row(form.category_nom), {
+            label: 'Nom'
+        }}}
+        {{ form_row(form.description, {
+            label: 'Description'
+        }) }}
+        {{ form_row(form.prix, {
+            label: 'Prix'
+        }) }}
+        {{ form_row(form.category, {
+            label: 'Categorie'
+        }) }}
+        {{ form_row(form.subcategory, {
+            label: 'Sous-catégorie'
+        }) }}
+                {{ form_row(form.prix, {
+            label: 'Prix'
+        }) }}
+        <button type="submit" class="btn">Register</button>
+{{form_end(form)}}
+{% block body %}
