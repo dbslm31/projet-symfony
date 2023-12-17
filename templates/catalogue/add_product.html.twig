@@ -5,14 +5,15 @@
     {% include "header.html.twig" %}
 </header>
 {{form_start(form)}}
-        {{ form_row(form.category_nom), {
-            label: 'Nom'
-        }}}
+        {{ form_row(form.nom)}}
         {{ form_row(form.description, {
-            label: 'Description'
+            label:'Description'
         }) }}
         {{ form_row(form.prix, {
             label: 'Prix'
+        }) }}
+        {{ form_row(form.promo, {
+            label: 'Promo'
         }) }}
         {{ form_row(form.category, {
             label: 'Categorie'
@@ -20,9 +21,9 @@
         {{ form_row(form.subcategory, {
             label: 'Sous-catégorie'
         }) }}
-                {{ form_row(form.prix, {
-            label: 'Prix'
+        {{ form_row(form.stock, {
+            label: 'stock'
         }) }}
         <button type="submit" class="btn">Register</button>
 {{form_end(form)}}
-{% block body %}
+{% endblock %}

@@ -82,23 +82,39 @@ class CatalogueController extends AbstractController
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             $product= $form->getData();
-            $product->setNom($product['nom']);
-            $product->setDescription($product['description']);
-            $product->setCategory($product['category']);
-            $product->setSubcategory($product['subcategory']);
-            $product->setPrix($product['prix']);
-            $product->setPromo($product['promo']);
-            $product->setStock($product['stock']);
-
             // tell Doctrine you want to (eventually) save the Product (no queries yet)
             $entityManagerInterface->persist($product);
-
             // actually executes the queries (i.e. the INSERT query)
             $entityManagerInterface->flush();
-
             return new Response('Saved new product with id '.$product->getId());
             };
         return $this->render('catalogue/add_product.html.twig',[
             'form'=>$form,]);
         }
-}
+
+        #[Route("/cataloguedelete/{id}", name:'app_catalogue_delete')]
+        public function deleteProduct($id): Response{
+            $em=$this->entityManager->getRepository(Catalogue::class);
+            $product=$em->find($id);
+            if (!$product){
+                throw $this->createNotFoundException('Produit inexistant');
+            } else{
+            $em->remove($product);
+            $em->flush();
+            return new Response('Product deleted sucessfully');
+            }
+        }
+
+        #[Route("/catalogueupdate/{id}", name:'app_catalogue_update')]
+        public function updateProduct($id): Response{
+            $em=$this->entityManager->getRepository(Catalogue::class);
+            $product=$em->find($id);
+            if (!$product){
+                throw $this->createNotFoundException('Produit inexistant');
+            } else{
+            $em->remove($product);
+            $em->flush();
+            return new Response('Product deleted sucessfully');
+            }
+        }
+    }
