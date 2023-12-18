@@ -147,7 +147,7 @@ class User implements UserInterface
 
     public function getRoles(): array
     {
-        return [$this->getRole()->getName()];
+        return [$this->getRole()->getNom()];
     }
 
     public function getPassword(): string
