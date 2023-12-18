@@ -4,11 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Catalogue;
 use App\Form\AddNewProductFormType;
+use App\Form\UpdateProductFormType;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\CatalogueRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class CatalogueController extends AbstractController
 {
@@ -60,7 +63,7 @@ class CatalogueController extends AbstractController
             throw $this->createNotFoundException('Le produit avec l\'ID ' . $id . ' n\'existe pas.');
         } else {
             return $this->render('catalogue/index.html.twig',[
-                'controller_name' => 'CatalogueController',
+                'controller_name' => 'CatalogueItemController',
                 'product'=>$product,
             ]);
         };
@@ -92,29 +95,35 @@ class CatalogueController extends AbstractController
             'form'=>$form,]);
         }
 
-        #[Route("/cataloguedelete/{id}", name:'app_catalogue_delete')]
-        public function deleteProduct($id): Response{
-            $em=$this->entityManager->getRepository(Catalogue::class);
+        #[Route('/cataloguedelete/{id}', name: 'app_catalogue_delete')]
+        public function deleteProduct($id): Response
+        {
+            $em= $this->entityManager->getRepository(Catalogue::class);
             $product=$em->find($id);
             if (!$product){
                 throw $this->createNotFoundException('Produit inexistant');
             } else{
-            $em->remove($product);
-            $em->flush();
-            return new Response('Product deleted sucessfully');
+            $em= $this->entityManager->remove($product);
+            $em= $this->entityManager->flush();
+            return $this->redirect('/catalogue');
             }
         }
 
-        #[Route("/catalogueupdate/{id}", name:'app_catalogue_update')]
-        public function updateProduct($id): Response{
-            $em=$this->entityManager->getRepository(Catalogue::class);
-            $product=$em->find($id);
-            if (!$product){
-                throw $this->createNotFoundException('Produit inexistant');
-            } else{
-            $em->remove($product);
-            $em->flush();
-            return new Response('Product deleted sucessfully');
+        #[Route('/catalogueupdate/{id}', name:'app_catalogue_update')]
+        public function updateProduct($id, Request $request, CatalogueRepository $catalogueRepo, EntityManagerInterface $entityManagerInterface): Response{
+            $redirect = new RedirectResponse('app_catalogue');
+            $productbase = $catalogueRepo->find($id);
+            $product = new Catalogue();
+            $form = $this->createForm(UpdateProductFormType::class, $productbase);
+            $form->handleRequest($request);
+            if($form->isSubmitted() && $form->isValid()){
+                // actually executes the queries (i.e. the INSERT query)
+                $entityManagerInterface->flush();
+                return $this->redirect('/catalogue');
+                };
+            return $this->render('catalogue/add_product.html.twig',[
+                'product'=>$productbase,
+                'form'=>$form,
+            ]);
             }
-        }
     }

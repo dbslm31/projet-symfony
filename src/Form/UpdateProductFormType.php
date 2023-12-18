@@ -13,19 +13,19 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AddNewProductFormType extends AbstractType
+class UpdateProductFormType extends AbstractType
 {
     private $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManagerInterface)
     {
-        $this->entityManager = $entityManager;
+        $this->entityManager = $entityManagerInterface;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $item= $this->entityManager->getRepository(Catalogue::class);
-        $product= $item->find($id);
+        $product= $item->find('id');
 
         $repository = $this->entityManager->getRepository(Category::class);
         $categories = $repository->findAll();
@@ -33,9 +33,17 @@ class AddNewProductFormType extends AbstractType
         $repositoryb = $this->entityManager->getRepository(Subcategory::class);
         $subcategories = $repositoryb->findAll();
 
+        /*$baseNom = $product->getNom();
+        $baseDescription= $product->getDescription();
+        $basePrix= $product->getPrix();
+        $basePromo=$product->getPromo();
+        $baseStock=$product->getStock();
+        $baseCategory=$product->getCategory();
+        $baseSubcategory=$product->getSubcategory();*/
+
         $builder
             ->add('nom', TextareaType::class)
-            ->add('description', TextareaType::class)
+            ->add('description', TextareaType::class,)
             ->add('prix', IntegerType::class)
             ->add('promo',IntegerType::class, [
                 'required'=>false,

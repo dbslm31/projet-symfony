@@ -9,21 +9,14 @@
 </style>
 
 <header>
-    {% include "header.html.twig" %}
+    {% include "header.html.twig" %}<br>
+    <div class="text-center"><a class="btn btn-outline-info text-dark"href="/catalogueaddto">Ajout Catalogue</a></div>
 </header>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/Applications/MAMP/htdocs/projet-symfony/src/Controller/CatalogueController.php'|file_link(0) }}">src/Controller/CatalogueController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/Applications/MAMP/htdocs/projet-symfony/templates/catalogue/index.html.twig'|file_link(0) }}">templates/catalogue/index.html.twig</a></code></li>
-    </ul>
 </div>
-<div class="d-flex flex-wrap">
+<div class="d-flex flex-wrap p-2 bg-gradients-warning">
 {% for product in products %}
-<div class="card h-100">
+<div class="card h-80 m-1">
     <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
     <div class="card-body p-4">
         <div class="text-center">
@@ -32,8 +25,10 @@
         </div>
     </div>
     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="catalogue/"+{{product.id}}>View options</a></div>
-        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="cataloguedelete/"+{{product.id}}>Delete</a></div>
+        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{{ path('app_product_detail', {'id': product.id }) }}">View options</a></div>
+        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{{ path('app_catalogue_update', {'id': product.id }) }}">Update</a>
+        <a class="btn btn-outline-dark mt-auto" href="{{ path('catalogue_delete', {'id': product.id }) }}">Delete</a></div>
+       
     </div>
 </div>
 {% endfor %}
