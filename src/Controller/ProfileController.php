@@ -19,21 +19,24 @@ class ProfileController extends AbstractController
     }
 
     #[Route('/profile', name: 'app_profile')]
-    public function showProfile($id): Response
+    public function showProfile(): Response
     {
         $repository = $this->entityManager->getRepository(User::class);
-        $profil= $repository->find($id);
+        $profil= $repository->find(1);
 
-        $commande=$profil->getCommandes();
+        /*$repository = $this->entityManager->getRepository(User::class);
+        $profil= $repository->find(1);*/
         $panier=$profil->getPanier();
+        $commandes=$profil->getCommandes();
+        
 
         if(!$profil){
             throw $this->createNotFoundException('vous n\'êtes pas connecté');
         } else {
             return $this->render('profile/index.html.twig',[
-                'controller_name' => 'CatalogueItemController',
+                'controller_name' => 'ProfileController',
                 'profil'=>$profil,
-                'commande'=>$commande,
+                'commandes'=>$commandes,
                 'panier'=>$panier,
             ]);
         }
