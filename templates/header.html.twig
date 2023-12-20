@@ -1,3 +1,22 @@
+<<<<<<< HEAD
+<ul class="nav nav-pills nav-fill gap-2 p-1 small bg-primary rounded-5 shadow-sm" id="pillNav2" role="tablist" style="--bs-nav-link-color: var(--bs-white); --bs-nav-pills-link-active-color: var(--bs-primary); --bs-nav-pills-link-active-bg: var(--bs-white);">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active rounded-5" id="home-tab2" data-bs-toggle="tab" type="button" role="tab" aria-selected="true"><a class='text-black' href={{ path('app_home')}} >Home</a></button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link rounded-5" id="profile-tab2" data-bs-toggle="tab" type="button" role="tab" aria-selected="false"><a class='text-black' href={{ path('app_profile')}} >Profile</a></button>
+        </li>
+
+        <li class="nav-item" role="presentation">
+                    <button class="nav-link rounded-5" id="panier-tab2" data-bs-toggle="tab" type="button" role="tab" aria-selected="false"><a class='text-black' href={{ path('app_panier')}} >Panier</a></button>
+                </li>
+       <li class="nav-item" role="presentation">
+                           <button class="nav-link rounded-5" id="magasin-tab2" data-bs-toggle="tab" type="button" role="tab" aria-selected="false"><a class='text-black' href={{ path('app_magasin')}} >Catalogue</a></button>
+                       </li>
+
+
+    </ul>
+=======
 {% set currentPath = path(app.request.attributes.get('_route'),
                        app.request.attributes.get('_route_params')) %}
 <ul class="nav nav-pills nav-fill gap-2 p-1 small bg-info rounded-5 shadow-sm" id="pillNav2" role="tablist" style="--bs-nav-link-color: var(--bs-white); --bs-nav-pills-link-active-color: var(--bs-primary); --bs-nav-pills-link-active-bg: var(--bs-white);">
@@ -23,3 +42,4 @@
         </button>
     </li>
 </ul>
+>>>>>>> d09e25a0182347aa5907d9bab3eed9648fd262ac

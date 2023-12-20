@@ -4,7 +4,15 @@ controllers:
         namespace: App\Controller
     type: attribute
 
+<<<<<<< HEAD
+
+
+buy_article:
+    path: /buy/{id}
+    controller: App\Controller\CommandeController::buyArticle
+=======
 catalogue_delete:
     path: /cataloguedelete/{id}
     controller: App\Controller\CatalogueController::deleteProduct
 #[Route("/cataloguedelete/{id}", name:'app_catalogue_delete')]
+>>>>>>> d09e25a0182347aa5907d9bab3eed9648fd262ac

@@ -17,13 +17,15 @@
         "symfony/framework-bundle": "6.3.*",
         "symfony/google-mailer": "6.3.*",
         "symfony/mailer": "6.3.*",
-        "symfony/runtime": "6.3.*",
+        "symfony/runtime": "^6.4",
         "symfony/security-bundle": "6.3.*",
         "symfony/twig-bundle": "6.3.*",
         "symfony/validator": "6.3.*",
+        "symfony/webpack-encore-bundle": "^2.1",
         "symfony/yaml": "6.3.*",
         "symfonycasts/reset-password-bundle": "^1.18",
-        "symfonycasts/verify-email-bundle": "^1.14"
+        "symfonycasts/verify-email-bundle": "^1.14",
+        "twbs/bootstrap": "5.3.2"
     },
     "config": {
         "allow-plugins": {
