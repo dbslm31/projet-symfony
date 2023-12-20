@@ -89,9 +89,9 @@ class CatalogueController extends AbstractController
             $entityManagerInterface->persist($product);
             // actually executes the queries (i.e. the INSERT query)
             $entityManagerInterface->flush();
-            return new Response('Saved new product with id '.$product->getId());
+            return $this->redirect('/catalogue');
             };
-        return $this->render('catalogue/add_product.html.twig',[
+        return $this->render('catalogue/index.html.twig',[
             'form'=>$form,]);
         }
 
@@ -121,7 +121,7 @@ class CatalogueController extends AbstractController
                 $entityManagerInterface->flush();
                 return $this->redirect('/catalogue');
                 };
-            return $this->render('catalogue/add_product.html.twig',[
+            return $this->render('catalogue/index.html.twig',[
                 'product'=>$productbase,
                 'form'=>$form,
             ]);

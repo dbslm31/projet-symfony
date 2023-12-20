@@ -42,12 +42,13 @@ class AddNewProductFormType extends AbstractType
                 'choices' => $categories,
                 'choice_label' => 'nom',
                 'multiple' => false,
+                'label'=>'Catégories',
             ])
             ->add('subcategory', ChoiceType::class, [
                 'choices' => $subcategories,
                 'choice_label'=>'nom',
                 'multiple' => false,
-                'label' => 'subcategory_name',
+                'label'=>'Sous-catégories',
                 'required'=>false,
             ])
         ;

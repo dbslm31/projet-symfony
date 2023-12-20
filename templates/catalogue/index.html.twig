@@ -12,8 +12,65 @@
     {% include "header.html.twig" %}<br>
     <div class="text-center"><a class="btn btn-outline-info text-dark text-decoration-none"href="/catalogueaddto">Ajout Catalogue</a></div>
 </header>
-
+{% set currentPath = path(app.request.attributes.get('_route'),
+                       app.request.attributes.get('_route_params')) %}
+{% if '/catalogueaddto'in currentPath or '/catalogueupdate' in currentPath %}
+<div class="m-3 p-2 d-flex">
+    {{form_start(form)}}
+        <div class="p-2 d-flex flex-column">
+            {{ form_label(form.nom) }}
+            {{ form_widget(form.nom) }}
+        </div>
+        <div class="p-2 d-flex flex-column">
+            {{ form_label(form.description) }}
+            {{ form_widget(form.description) }}
+        </div>
+        <div class="p-2 d-flex flex-column">
+            {{ form_label(form.prix) }}
+            {{ form_widget(form.prix) }}
+        </div>
+        <div class="p-2 d-flex flex-column">
+            {{ form_label(form.promo) }}
+            {{ form_widget(form.promo) }}
+        </div>
+        <div class="p-2 d-flex flex-column">
+            {{ form_label(form.category) }}
+            {{ form_widget(form.category) }}
+        </div>
+        <div class="p-2 d-flex flex-column">
+            {{ form_label(form.subcategory) }}
+            {{ form_widget(form.subcategory) }}
+        </div>
+        <div class="p-2 d-flex flex-column">
+            {{ form_label(form.stock) }}
+            {{ form_widget(form.stock) }}
+        </div>
+        <div class="p-2 mx-3 d-flex">
+            <button type="submit" class="btn rounded-5 btn-small btn-outline-dark mx-5">Ajouter</button>
+        </div>
+    {{form_end(form)}}
 </div>
+{% elseif '/catalogue/' in currentPath %}
+<div id="profil_info" class="d-flex flex-wrap flex-column">
+        <div class="d-flex flex-wrap flex-row my-2">
+            <div id="profil_image" class="border border-dark mx-2">
+                <img src="https://dummyimage.com/250x200/dee2e6/6c757d.jpg" alt="profil img blank"></img>
+            </div>
+            <div class="d-flex flex-column p-3">
+                <div class="d-flex flex-row">
+                    <h3>{{product.nom}}</h3>
+                </div>
+                <div class="d-flex flex-row">
+                    <h3>{{product.prix}}&#8364<h3>
+                </div>
+                <div class="d-flex flex-row">
+                    <p>{{product.description}}</p>
+                </div>
+                <div class="text-center"><a class="btn btn-small rounded-5 btn-outline-dark mx-2"> Commander </a></div>
+             </div>
+        </div>
+
+{% else %}
 <div class="d-flex flex-wrap p-2 bg-gradients-warning">
 {% for product in products %}
 <div class="card h-80 m-1">
@@ -32,6 +89,7 @@
     </div>
 </div>
 {% endfor %}
+{% endif %}
 </div>
 <footer>
     {% include "footer.html.twig" %}
