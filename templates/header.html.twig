@@ -1,0 +1,25 @@
+{% set currentPath = path(app.request.attributes.get('_route'),
+                       app.request.attributes.get('_route_params')) %}
+<ul class="nav nav-pills nav-fill gap-2 p-1 small bg-info rounded-5 shadow-sm" id="pillNav2" role="tablist" style="--bs-nav-link-color: var(--bs-white); --bs-nav-pills-link-active-color: var(--bs-primary); --bs-nav-pills-link-active-bg: var(--bs-white);">
+    <li class="nav-item" role="presentation">
+        <button {% if '/catalogue'in currentPath or '/profil' in currentPath or '/panier' in currentPath %} class="nav-link rounded-5" {% else %} class="nav-link rounded-5 active"{% endif %}
+         id="home-tab2" data-bs-toggle="tab" type="button" role="tab" {% if '/catalogue' or '/profil' or '/panier' in currentPath %} aria-selected="false"{% else %}aria-selected="true"{% endif %}>
+            <a class='text-black text-decoration-none' href={{ path('app_home')}} >Home</a>
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button {% if '/profil' in currentPath %} class="nav-link rounded-5 active" {% else %}class="nav-link rounded-5"{% endif %} id="profile-tab2" data-bs-toggle="tab" type="button" role="tab" {% if '/profil' in currentPath %}aria-selected="true" class="active"{% else %}aria-selected="false"{% endif %}>
+            <a class='text-black text-decoration-none' href={{ path('app_profile')}} >Profile</a>
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button {% if '/panier' in currentPath %} class="nav-link rounded-5 active" {% else %}class="nav-link rounded-5"{% endif %} id="panier-tab2" data-bs-toggle="tab" type="button" role="tab" {% if '/panier' in currentPath %}aria-selected="true" class="active"{% else %}aria-selected="false"{% endif %}>
+            <a class='text-black text-decoration-none' href={{ path('app_panier')}} >Panier</a>
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button {% if '/catalogue' in currentPath %} class="nav-link rounded-5 active" {% else %}class="nav-link rounded-5"{% endif %} id="magasin-tab2" data-bs-toggle="tab" type="button" role="tab" {% if '/catalogue' in currentPath %}aria-selected="true" {% else %}aria-selected="false"{% endif %}>
+            <a class='text-black text-decoration-none' href={{ path('app_catalogue')}} >Magasin</a>
+        </button>
+    </li>
+</ul>

@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon panier{% endblock %}
+
+{% block body %}
+    <header>
+        {% include "header.html.twig" %}
+    </header>
+
+    <h3>Mon Panier</h3>
+
+
+    <p>Voici les articles que vous avez ajoutés</p>
+
+    <table class="table mt-5">
+        <thead>
+        <tr>
+            <th scope="col">Article</th>
+            <th scope="col">Prix (unitaire)</th>
+            <th class="text-center" scope="col">Quantité</th>
+            <th scope="col">Total</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in 10 %}
+
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <th>Total</th>
+        <td></td>
+        <td class="text-center">  <small>x</small> 10</td>
+        <th>100 €</th>
+        </tfoot>
+    </table>
+
+
+
+
+{% endblock %}

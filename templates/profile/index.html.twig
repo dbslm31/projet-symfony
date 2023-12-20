@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProfileController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<header>
+    {% include "header.html.twig" %}
+</header>
+<div>
+    <div id="profil_info" class="d-flex flex-wrap flex-column">
+        <div class="d-flex flex-wrap flex-row my-2">
+            <div id="profil_image" class="rounded-circle border border-dark mx-2">
+                <img class="rounded-circle" src="https://dummyimage.com/150x150/dee2e6/6c757d.jpg" alt="profil img blank"></img>
+            </div>
+            <div class="d-flex flex-column p-3">
+                <div class="d-flex flex-row">
+                    <div><h4>{{profil.nom}}</h4></div>
+                    <div class="text-center"><a class="btn rounded-5 btn-small btn-outline-dark mx-2"> Changer</a></div>
+                </div>
+                <div class="d-flex flex-row">
+                    <div><p>{{profil.mail}}</p></div>
+                    <div class="text-center"><a class="btn rounded-5 btn-small btn-outline-dark mx-2"> Changer</a></div>
+                </div>
+                    <div class="d-flex flex-row">
+                    <div><p>{{profil.mdp}}</p></div>
+                    <div class="text-center"><a class="btn rounded-5 btn-small btn-outline-dark mx-2"> Changer</a></div>
+                </div>
+             </div>
+        </div>
+    <div class="d-flex flex-wrap justify-content-around">
+        <div id="panier_track">
+            <div>
+                <h2>Panier</h2>
+            </div>
+            <div>
+                {% if panier == NULL %}
+                <p>Votre panier est vide</p>
+                {% else %}
+                {{ panier }}
+                {% endif %}
+            </div>
+        </div>
+        <div id="commandes_track">
+            <div>
+                <h2>Commandes</h2>
+            </div>
+            <div>
+                {% if commandes is empty %}
+                <p>Votre panier est vide</p>
+                {% else %}
+                {% for commande in commandes %}
+                    <li>{{ commande }}</li>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<footer>
+    {% include "footer.html.twig" %}
+</footer>
+{% endblock %}
