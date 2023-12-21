@@ -78,7 +78,14 @@
     <div class="card-body p-4">
         <div class="text-center">
             <h5 class="fw-bolder">{{product.nom}}</h5>
-            {{product.prix}}&#8364
+            <h5>
+            {% if product.promo != NULL %}
+                <s>{{ product.prix }} &#8364</s> &#10132 
+                {{ product.prix - ( product.promo / 100) }}&#8364
+            {% else %}
+                {{product.prix}}&#8364
+            {% endif %}
+            </h5>
         </div>
     </div>
     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
